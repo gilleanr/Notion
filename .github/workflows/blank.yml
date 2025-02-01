@@ -1,0 +1,28 @@
+name: Actualizar Notion Automáticamente
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'  # Ejecuta cada 30 minutos
+  workflow_dispatch:  # Permite ejecución manual desde GitHub Actions
+
+jobs:
+  update_notion:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Clonar el repositorio
+        uses: actions/checkout@v4
+
+      - name: 🛠️ Configurar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: 📦 Instalar dependencias
+        run: pip install requests
+
+      - name: 🔄 Ejecutar script de actualización
+        run: python notion_update.py
+        env:
+          NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
+          DATABASE_ID: ${{ secrets.DATABASE_ID }}
+          CUENTAS_DATABASE_ID: ${{ secrets.CUENTAS_DATABASE_ID }}
